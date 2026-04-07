@@ -93,6 +93,74 @@ class ScheduleCache:
             self.talks_by_day[date_str] = day_talks
 
 
+def format_talks_table(talks: list[dict]) -> str:
+    if not talks:
+        return "No talks found."
+    lines = ["| Time | Duration | Title | Room | Track | Type | Speakers |"]
+    lines.append("|---|---|---|---|---|---|---|")
+    for t in talks:
+        speakers = ", ".join(p.get("public_name", p["name"]) for p in t.get("persons", []))
+        lines.append(
+            f"| {t['start']} | {t['duration']} | {t['title']} | {t['room']} "
+            f"| {t.get('track', '-')} | {t.get('type', '-')} | {speakers} |"
+        )
+    return "\n".join(lines)
+
+
+def format_talk_detail(talk: dict) -> str:
+    speakers = ", ".join(p.get("public_name", p["name"]) for p in talk.get("persons", []))
+    lines = [
+        f"# {talk['title']}",
+    ]
+    if talk.get("subtitle"):
+        lines.append(f"*{talk['subtitle']}*")
+    lines.append("")
+    lines.append(f"- **Code:** {talk['code']}")
+    lines.append(f"- **Date:** {talk['date']}")
+    lines.append(f"- **Time:** {talk['start']} ({talk['duration']})")
+    lines.append(f"- **Room:** {talk['room']}")
+    lines.append(f"- **Track:** {talk.get('track', '-')}")
+    lines.append(f"- **Type:** {talk.get('type', '-')}")
+    lines.append(f"- **Language:** {talk.get('language', '-')}")
+    lines.append(f"- **Speakers:** {speakers}")
+    lines.append("")
+    if talk.get("abstract"):
+        lines.append("## Abstract")
+        lines.append(talk["abstract"])
+        lines.append("")
+    if talk.get("description"):
+        lines.append("## Description")
+        lines.append(talk["description"])
+        lines.append("")
+    for person in talk.get("persons", []):
+        lines.append(f"## Speaker: {person.get('public_name', person['name'])}")
+        if person.get("biography"):
+            lines.append(person["biography"])
+        lines.append("")
+    if talk.get("links"):
+        lines.append("## Links")
+        for link in talk["links"]:
+            lines.append(f"- [{link.get('title', link['url'])}]({link['url']})")
+        lines.append("")
+    return "\n".join(lines)
+
+
+def format_speaker_info(speaker: dict) -> str:
+    lines = [f"# {speaker['name']}"]
+    lines.append("")
+    if speaker.get("biography"):
+        lines.append(speaker["biography"])
+        lines.append("")
+    if speaker.get("avatar"):
+        lines.append(f"**Avatar:** {speaker['avatar']}")
+        lines.append("")
+    lines.append("## Talks")
+    lines.append("")
+    for talk in speaker["talks"]:
+        lines.append(f"- **{talk['title']}** ({talk['start']}, {talk['room']}, {talk.get('track', '-')})")
+    return "\n".join(lines)
+
+
 cache = ScheduleCache()
 mcp = FastMCP("EC26 Schedule")
 
