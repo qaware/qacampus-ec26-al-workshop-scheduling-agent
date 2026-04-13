@@ -96,12 +96,12 @@ class ScheduleCache:
 def format_talks_table(talks: list[dict]) -> str:
     if not talks:
         return "No talks found."
-    lines = ["| Time | Duration | Title | Room | Track | Type | Speakers |"]
-    lines.append("|---|---|---|---|---|---|---|")
+    lines = ["| Code | Time | Duration | Title | Room | Track | Type | Speakers |"]
+    lines.append("|---|---|---|---|---|---|---|---|")
     for t in talks:
         speakers = ", ".join(p.get("public_name", p["name"]) for p in t.get("persons", []))
         lines.append(
-            f"| {t['start']} | {t['duration']} | {t['title']} | {t['room']} "
+            f"| {t['code']} | {t['start']} | {t['duration']} | {t['title']} | {t['room']} "
             f"| {t.get('track', '-')} | {t.get('type', '-')} | {speakers} |"
         )
     return "\n".join(lines)
@@ -267,7 +267,12 @@ async def search_talks(query: str) -> str:
     if not results:
         return f"No talks found matching '{query}'."
     results.sort(key=lambda t: (t.get("date", ""), t["start"]))
-    return f"## Search results for '{query}' ({len(results)} matches)\n\n{format_talks_table(results)}"
+    parts = [f"## Search results for '{query}' ({len(results)} matches)\n\n{format_talks_table(results)}"]
+    for t in results:
+        abstract = t.get("abstract", "").strip()
+        if abstract:
+            parts.append(f"\n### {t['code']} — {t['title']}\n**Abstract:** {abstract}")
+    return "\n".join(parts)
 
 
 @mcp.tool(annotations={"readOnlyHint": True})

@@ -63,12 +63,15 @@ class TestMarkdownFormatters:
     def test_format_talks_table_produces_markdown_table(self, cache):
         talks = cache.talks_by_day["2026-04-15"]
         result = format_talks_table(talks)
+        assert "| Code" in result
         assert "| Time" in result
         assert "Opening Keynote" in result
         assert "Cloud Native Patterns" in result
         assert "Hands-on AI Workshop" in result
         # Should contain table separator
         assert "|---|" in result
+        # Should contain talk codes
+        assert "AAAAAA" in result
 
     def test_format_talks_table_empty_list(self):
         result = format_talks_table([])
@@ -186,6 +189,11 @@ class TestTools:
         server_cache._build_indexes()
         result = await search_talks("keynote")
         assert "Opening Keynote" in result
+        # Should contain talk code for agent chaining
+        assert "AAAAAA" in result
+        # Should contain abstract section
+        assert "### AAAAAA" in result
+        assert "**Abstract:**" in result
 
     @pytest.mark.asyncio
     async def test_search_talks_by_speaker(self, cache):
