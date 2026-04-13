@@ -59,7 +59,7 @@ class ScheduleCache:
         self.speakers = {}
         self._day_index_map = {}
 
-        for day in schedule["days"]:
+        for day in self.conference["days"]:
             date_str = day["date"]
             self._day_index_map[str(day["index"])] = date_str
             day_talks = []
@@ -287,4 +287,4 @@ async def get_speaker_info(name: str) -> str:
 
 
 if __name__ == "__main__":
-    mcp.run(transport="sse", host=HOST, port=PORT)
+    mcp.run(transport="streamable-http", host=HOST, port=PORT)

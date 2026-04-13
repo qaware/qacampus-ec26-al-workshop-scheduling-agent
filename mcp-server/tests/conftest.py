@@ -18,8 +18,7 @@ SAMPLE_SCHEDULE = {
                 {"name": "AI Transformation", "color": "#ff0000"},
                 {"name": "Cloud Transformation", "color": "#0000ff"},
             ],
-        },
-        "days": [
+            "days": [
             {
                 "index": 1,
                 "date": "2026-04-15",
@@ -158,7 +157,8 @@ SAMPLE_SCHEDULE = {
                     ]
                 },
             },
-        ],
+            ],
+        },
     }
 }
 

@@ -1,0 +1,14 @@
+apiVersion: runtime.agentic-layer.ai/v1alpha1
+kind: ToolServer
+metadata:
+  name: ec-schedule-mcp
+  namespace: ec-schedule
+spec:
+  protocol: mcp
+  transportType: http
+  image: ec-schedule-mcp:latest
+  port: 8000
+  replicas: 1
+  env:
+    - name: LOGLEVEL
+      value: DEBUG

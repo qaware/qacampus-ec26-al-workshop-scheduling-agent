@@ -14,7 +14,7 @@ pip install -e ".[dev]"
 python server.py
 ```
 
-The server starts on `http://0.0.0.0:8000` with SSE transport.
+The server starts on `http://0.0.0.0:8000` with Streamable HTTP transport.
 
 ## Configuration
 
@@ -43,7 +43,7 @@ Add to your MCP client config:
 {
   "mcpServers": {
     "ec26-schedule": {
-      "url": "http://localhost:8000/sse"
+      "url": "http://localhost:8000/mcp"
     }
   }
 }

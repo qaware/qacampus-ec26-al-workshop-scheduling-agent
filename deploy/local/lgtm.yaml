@@ -1,0 +1,155 @@
+# this is intended for demo / testing purposes only, not for production usage
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lgtm
+  namespace: monitoring
+spec:
+  selector:
+    app: lgtm
+  ports:
+    - name: grafana
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+    - name: otel-grpc
+      protocol: TCP
+      port: 4317
+      targetPort: 4317
+    - name: otel-http
+      protocol: TCP
+      port: 4318
+      targetPort: 4318
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: monitoring
+data:
+  prometheus.yaml: |
+    global:
+      scrape_native_histograms: true
+    otlp:
+      keep_identifying_resource_attributes: true
+      promote_resource_attributes:
+        - service.instance.id
+        - service.name
+        - service.namespace
+        - service.version
+        - cloud.availability_zone
+        - cloud.region
+        - container.name
+        - deployment.environment
+        - deployment.environment.name
+        - k8s.cluster.name
+        - k8s.container.name
+        - k8s.cronjob.name
+        - k8s.daemonset.name
+        - k8s.deployment.name
+        - k8s.job.name
+        - k8s.namespace.name
+        - k8s.node.name
+        - k8s.pod.name
+        - k8s.replicaset.name
+        - k8s.statefulset.name
+        - host.name
+    storage:
+      tsdb:
+        out_of_order_time_window: 10m
+    scrape_configs:
+      - job_name: 'ai-gateway'
+        scrape_interval: 15s
+        static_configs:
+          - targets: ['ai-gateway.ai-gateway.svc.cluster.local:80']
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lgtm
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lgtm
+  template:
+    metadata:
+      labels:
+        app: lgtm
+    spec:
+      containers:
+        - name: lgtm
+          image: grafana/otel-lgtm:0.20.0
+          ports:
+            - containerPort: 3000
+            - containerPort: 4317
+            - containerPort: 4318
+          readinessProbe:
+            exec:
+              command:
+                - cat
+                - /tmp/ready
+          env:
+            # Use observability-dashboard, if deployed (lgtm will silently ignore it otherwise)
+            - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+              value: "http://observability-dashboard.observability-dashboard.svc.cluster.local:8000/v1/traces"
+            - name: ENABLE_LOGS_TEMPO
+              value: "true"
+            - name: ENABLE_LOGS_LOKI
+              value: "true"
+            - name: ENABLE_LOGS_OTELCOL
+              value: "true"
+            - name: ENABLE_LOGS_PROMETHEUS
+              value: "true"
+          volumeMounts:
+            - name: tempo-data
+              mountPath: /data/tempo
+            - name: grafana-data
+              mountPath: /data/grafana
+            - name: loki-data
+              mountPath: /data/loki
+            - name: loki-storage
+              mountPath: /loki
+            - name: p8s-storage
+              mountPath: /data/prometheus
+            - name: pyroscope-storage
+              mountPath: /data/pyroscope
+            - name: grafana-dashboard-provisioning
+              # Provisioning config that tells Grafana to scan the testbench-dashboards directory
+              mountPath: /otel-lgtm/grafana/conf/provisioning/dashboards/testbench-dashboards.yaml
+              subPath: testbench-dashboards.yaml
+            - name: prometheus-config
+              mountPath: /otel-lgtm/prometheus.yaml
+              subPath: prometheus.yaml
+            - name: grafana-dashboards
+              mountPath: /etc/grafana/provisioning/dashboards/testbench-dashboards
+      volumes:
+        - name: tempo-data
+          emptyDir: {}
+        - name: loki-data
+          emptyDir: {}
+        - name: grafana-data
+          emptyDir: {}
+        - name: loki-storage
+          emptyDir: {}
+        - name: p8s-storage
+          emptyDir: {}
+        - name: pyroscope-storage
+          emptyDir: {}
+        - name: grafana-dashboards
+          configMap:
+            name: grafana-testkube-dashboard
+            optional: true
+        - name: grafana-dashboard-provisioning
+          configMap:
+            name: grafana-dashboard-provisioning
+            optional: true
+        - name: prometheus-config
+          configMap:
+            name: prometheus-config
