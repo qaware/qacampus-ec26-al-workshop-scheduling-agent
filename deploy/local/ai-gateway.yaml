@@ -21,3 +21,6 @@ spec:
       provider: gemini
     - name: gemini-2.5-flash
       provider: gemini
+  guardrails:
+    - name: pii-guard
+      namespace: ai-gateway

@@ -1,0 +1,36 @@
+# Presidio PII masking guardrail for the AiGateway.
+# Requires presidio.yaml to be deployed first.
+---
+# GuardrailProvider references the Presidio backend service.
+apiVersion: runtime.agentic-layer.ai/v1alpha1
+kind: GuardrailProvider
+metadata:
+  name: presidio
+  namespace: ai-gateway
+spec:
+  type: presidio-api
+  presidio:
+    baseUrl: "http://presidio:80"
+---
+# Guard defines when the guardrail is applied and references the provider.
+apiVersion: runtime.agentic-layer.ai/v1alpha1
+kind: Guard
+metadata:
+  name: pii-guard
+  namespace: ai-gateway
+spec:
+  mode:
+    - pre_call
+  description: Detect and mask PII in user inputs before they are sent to the LLM.
+  providerRef:
+    name: presidio
+    namespace: ai-gateway
+  presidio:
+    language: "de"
+    scoreThresholds:
+      ALL: "0.7"
+    # Per-entity actions: "MASK" redacts the entity, "BLOCK" rejects the request.
+    # The keys also determine which entity types are detected.
+    entityActions:
+      EMAIL_ADDRESS: "MASK"
+      CREDIT_CARD: "BLOCK"

@@ -10,3 +10,5 @@ resources:
   - agent-runtime-config.yaml
   - ec-schedule-mcp.yaml
   - ec-schedule-agent.yaml
+  - presidio.yaml
+  - guardrail-presidio.yaml
