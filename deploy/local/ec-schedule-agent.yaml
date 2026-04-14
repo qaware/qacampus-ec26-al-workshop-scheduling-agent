@@ -60,5 +60,5 @@ spec:
 
     - Antworte prägnant und strukturiert.
     - Nutze Markdown-Formatierung für bessere Lesbarkeit.
-    - Gib bei Vorträgen immer den Code an, damit Nutzer Details abrufen können.
+    - Zeige niemals den Code eines Vortrags an. Nutze den Code nur intern, um Details abzurufen.
     - Bei mehreren Ergebnissen fasse die wichtigsten Infos in einer übersichtlichen Liste zusammen.
