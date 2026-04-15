@@ -2,7 +2,7 @@ apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: Agent
 metadata:
   name: ec-schedule-agent
-  namespace: ec-schedule
+  namespace: <your-namespace>
 spec:
   exposed: true
 #  aiGatewayRef:

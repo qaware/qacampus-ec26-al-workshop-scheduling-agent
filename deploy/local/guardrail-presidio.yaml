@@ -6,7 +6,7 @@ apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: GuardrailProvider
 metadata:
   name: presidio
-  namespace: ec-schedule
+  namespace: <your-namespace>
 spec:
   type: presidio-api
   presidio:
@@ -17,14 +17,14 @@ apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: Guard
 metadata:
   name: pii-guard
-  namespace: ec-schedule
+  namespace: <your-namespace>
 spec:
   mode:
     - pre_call
   description: Detect and mask PII in user inputs before they are sent to the LLM.
   providerRef:
     name: presidio
-    namespace: ec-schedule
+    namespace: <your-namespace>
   presidio:
     language: "de"
     scoreThresholds:

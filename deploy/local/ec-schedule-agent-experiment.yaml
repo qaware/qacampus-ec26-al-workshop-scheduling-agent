@@ -2,10 +2,11 @@ apiVersion: testbench.agentic-layer.ai/v1alpha1
 kind: Experiment
 metadata:
   name: ec-schedule-agent-experiment
+  namespace: <your-namespace>
 spec:
   agentRef:
     name: ec-schedule-agent
-    namespace: ec-schedule
+    namespace: <your-namespace>
   aiGatewayRef:
     name: ai-gateway
     namespace: ai-gateway

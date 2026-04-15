@@ -2,7 +2,7 @@ apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: AiGateway
 metadata:
   name: ai-gateway-pii
-  namespace: ec-schedule
+  namespace: <your-namespace>
 spec:
   aiGatewayClassName: litellm
   env:
@@ -17,4 +17,4 @@ spec:
       provider: gemini
   guardrails:
     - name: pii-guard
-      namespace: ec-schedule
+      namespace: <your-namespace>

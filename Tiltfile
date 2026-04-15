@@ -88,20 +88,20 @@ load('ext://librechat', 'librechat_install')
 librechat_install(port='11003')
 
 
-k8s_yaml(kustomize('deploy/local'))
-
-k8s_yaml(secret_from_dict(
-    name = "api-key-secrets",
-    namespace = "ec-schedule",
-    # The ai-gateway expects the API key to be called <provider>_API_KEY
-    inputs = { "GEMINI_API_KEY": google_api_key }
-))
-
-k8s_resource(
-    objects=['presidio:guardrailprovider', 'pii-guard:guard'],
-    new_name='presidio-guardrail',
-    labels=['agentic-layer'],
-    resource_deps=['agent-runtime', 'presidio']
-)
-
-k8s_resource('ai-gateway-pii', labels=['agentic-layer'], resource_deps=['agent-runtime', 'presidio-guardrail'])
+# k8s_yaml(kustomize('deploy/local'))
+#
+# k8s_yaml(secret_from_dict(
+#     name = "api-key-secrets",
+#     namespace = "ec-schedule",
+#     # The ai-gateway expects the API key to be called <provider>_API_KEY
+#     inputs = { "GEMINI_API_KEY": google_api_key }
+# ))
+#
+# k8s_resource(
+#     objects=['presidio:guardrailprovider', 'pii-guard:guard'],
+#     new_name='presidio-guardrail',
+#     labels=['agentic-layer'],
+#     resource_deps=['agent-runtime', 'presidio']
+# )
+#
+# k8s_resource('ai-gateway-pii', labels=['agentic-layer'], resource_deps=['agent-runtime', 'presidio-guardrail'])
