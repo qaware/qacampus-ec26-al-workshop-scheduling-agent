@@ -1,0 +1,35 @@
+apiVersion: testbench.agentic-layer.ai/v1alpha1
+kind: Experiment
+metadata:
+  name: ec-schedule-agent-experiment
+spec:
+  agentRef:
+    name: ec-schedule-agent
+    namespace: ec-schedule
+  aiGatewayRef:
+    name: ai-gateway
+    namespace: ai-gateway
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://lgtm.monitoring.svc.cluster.local:4318"
+  dataset:
+    inline:
+      llmAsAJudgeModel: gemini-2.5-flash-lite
+      defaultThreshold: 0.9
+      scenarios:
+        - name: "Informationen zum Talk Hands-on with the Agentic Layer"
+          steps:
+            - input: "Gib mir Informationen zum Talk Hands-on with the Agentic Layer."
+              reference:
+                toolCalls:
+                  - name: search_talks
+                    args:
+                      query: "Hands-on with the Agentic Layer"
+                topics:
+                  - talk
+              metrics:
+                - metricName: AgentGoalAccuracyWithoutReference
+                - metricName: ToolCallAccuracy
+                - metricName: TopicAdherence
+                  parameters:
+                    mode: precision

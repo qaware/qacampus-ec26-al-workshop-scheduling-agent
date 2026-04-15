@@ -86,6 +86,8 @@ v1alpha1.extension(name='testbench', repo_name='agentic-layer', repo_path='testb
 load('ext://testbench', 'testbench_install')
 testbench_install(version='0.8.0', operator_version='0.8.0')
 
+k8s_resource('ec-schedule-agent-experiment', labels=['testing'], resource_deps=['testbench', 'ai-gateway'])
+
 # LibreChat
 v1alpha1.extension(name='librechat', repo_name='agentic-layer', repo_path='librechat')
 load('ext://librechat', 'librechat_install')
