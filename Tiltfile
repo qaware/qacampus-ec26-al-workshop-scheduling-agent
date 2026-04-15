@@ -37,7 +37,6 @@ docker_build(
     context='./mcp-server',
 )
 k8s_resource('ec-schedule-mcp', port_forwards='11020:8000', labels=['showcase'], resource_deps=['agent-runtime'])
-k8s_resource('ec-schedule-agent', labels=['showcase'], resource_deps=['agent-runtime', 'ec-schedule-mcp'])
 
 # Presidio PII Guardrail
 k8s_resource('presidio', labels=['agentic-layer'])
@@ -47,7 +46,6 @@ k8s_resource('ai-gateway', labels=['agentic-layer'], resource_deps=['agent-runti
 k8s_resource('agent-gateway', labels=['agentic-layer'], resource_deps=['agent-runtime'], port_forwards='11002:8080')
 k8s_resource('tool-gateway', labels=['agentic-layer'], resource_deps=['agent-runtime'], port_forwards='11005:80')
 k8s_resource('agent-runtime-configuration', labels=['agentic-layer'], resource_deps=['agent-runtime'])
-k8s_resource('ai-gateway', labels=['agentic-layer'], resource_deps=['agent-runtime', 'presidio-guardrail'], port_forwards='11006:80')
 
 # Monitoring
 k8s_resource('lgtm', labels=['monitoring'], port_forwards=['11000:3000'])
@@ -80,8 +78,6 @@ v1alpha1.extension(name='testbench', repo_name='agentic-layer', repo_path='testb
 load('ext://testbench', 'testbench_install')
 testbench_install(version='0.8.0', operator_version='0.8.0')
 
-k8s_resource('ec-schedule-agent-experiment', labels=['testing'], resource_deps=['testbench', 'ai-gateway'])
-
 # LibreChat
 v1alpha1.extension(name='librechat', repo_name='agentic-layer', repo_path='librechat')
 load('ext://librechat', 'librechat_install')
@@ -96,6 +92,9 @@ librechat_install(port='11003')
 #     # The ai-gateway expects the API key to be called <provider>_API_KEY
 #     inputs = { "GEMINI_API_KEY": google_api_key }
 # ))
+#
+# k8s_resource('ec-schedule-agent', labels=['showcase'], resource_deps=['agent-runtime', 'ec-schedule-mcp'])
+# k8s_resource('ec-schedule-agent-experiment', labels=['testing'], resource_deps=['testbench', 'ai-gateway'])
 #
 # k8s_resource(
 #     objects=['presidio:guardrailprovider', 'pii-guard:guard'],
