@@ -33,4 +33,5 @@ spec:
     # The keys also determine which entity types are detected.
     entityActions:
       EMAIL_ADDRESS: "MASK"
+      PERSON: "MASK"
       CREDIT_CARD: "BLOCK"
