@@ -6,25 +6,25 @@ apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: GuardrailProvider
 metadata:
   name: presidio
-  namespace: ai-gateway
+  namespace: ec-schedule
 spec:
   type: presidio-api
   presidio:
-    baseUrl: "http://presidio:80"
+    baseUrl: "http://presidio.presidio:80"
 ---
 # Guard defines when the guardrail is applied and references the provider.
 apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: Guard
 metadata:
   name: pii-guard
-  namespace: ai-gateway
+  namespace: ec-schedule
 spec:
   mode:
     - pre_call
   description: Detect and mask PII in user inputs before they are sent to the LLM.
   providerRef:
     name: presidio
-    namespace: ai-gateway
+    namespace: ec-schedule
   presidio:
     language: "de"
     scoreThresholds:

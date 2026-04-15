@@ -29,7 +29,7 @@ load('ext://tool-gateway-agentgateway', 'tool_gateway_agentgateway_install')
 tool_gateway_agentgateway_install(version='0.2.3', instance=False)
 
 # Apply local Kubernetes manifests
-k8s_yaml(kustomize('deploy/local'))
+k8s_yaml(kustomize('deploy/infra'))
 
 # Build MCP server images from single Dockerfile, selecting the server via CMD
 docker_build(
@@ -41,12 +41,6 @@ k8s_resource('ec-schedule-agent', labels=['showcase'], resource_deps=['agent-run
 
 # Presidio PII Guardrail
 k8s_resource('presidio', labels=['agentic-layer'])
-k8s_resource(
-    objects=['presidio:guardrailprovider', 'pii-guard:guard'],
-    new_name='presidio-guardrail',
-    labels=['agentic-layer'],
-    resource_deps=['agent-runtime', 'presidio']
-)
 
 # Agentic Layer Components
 k8s_resource('ai-gateway', labels=['agentic-layer'], resource_deps=['agent-runtime'], port_forwards=['11001:80'])
@@ -92,3 +86,22 @@ k8s_resource('ec-schedule-agent-experiment', labels=['testing'], resource_deps=[
 v1alpha1.extension(name='librechat', repo_name='agentic-layer', repo_path='librechat')
 load('ext://librechat', 'librechat_install')
 librechat_install(port='11003')
+
+
+k8s_yaml(kustomize('deploy/local'))
+
+k8s_yaml(secret_from_dict(
+    name = "api-key-secrets",
+    namespace = "ec-schedule",
+    # The ai-gateway expects the API key to be called <provider>_API_KEY
+    inputs = { "GEMINI_API_KEY": google_api_key }
+))
+
+k8s_resource(
+    objects=['presidio:guardrailprovider', 'pii-guard:guard'],
+    new_name='presidio-guardrail',
+    labels=['agentic-layer'],
+    resource_deps=['agent-runtime', 'presidio']
+)
+
+k8s_resource('ai-gateway-pii', labels=['agentic-layer'], resource_deps=['agent-runtime', 'presidio-guardrail'])

@@ -5,6 +5,9 @@ metadata:
   namespace: ec-schedule
 spec:
   exposed: true
+#  aiGatewayRef:
+#    name: ai-gateway-pii
+#    namespace: ec-schedule
   model: "gemini/gemini-2.5-flash-lite"
   tools:
     - name: ec-schedule-mcp

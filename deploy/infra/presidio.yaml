@@ -5,11 +5,16 @@
 #   POST presidio:80/analyze
 #   POST presidio:80/anonymize
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: presidio
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: presidio
-  namespace: ai-gateway
+  namespace: presidio
   labels:
     app: presidio
 spec:
@@ -53,7 +58,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: presidio
-  namespace: ai-gateway
+  namespace: presidio
 spec:
   selector:
     app: presidio

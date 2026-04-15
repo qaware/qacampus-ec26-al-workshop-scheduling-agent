@@ -1,15 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - namespace.yaml
-  - agent-gateway.yaml
-  - ai-gateway.yaml
-  - lgtm.yaml
-  - lgtm-grafana-dashboard-config.yaml
-  - tool-gateway.yaml
-  - agent-runtime-config.yaml
-  - ec-schedule-mcp.yaml
+  - guardrail-presidio.yaml
+  - ai-gateway-pii.yaml
   - ec-schedule-agent.yaml
   - ec-schedule-agent-experiment.yaml
-  - presidio.yaml
-  - guardrail-presidio.yaml
