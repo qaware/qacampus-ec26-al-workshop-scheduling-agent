@@ -12,6 +12,8 @@ spec:
   env:
     - name: OTEL_EXPORTER_OTLP_ENDPOINT
       value: "http://lgtm.monitoring.svc.cluster.local:4318"
+  trigger:
+    enabled: true
   dataset:
     inline:
       llmAsAJudgeModel: gemini-2.5-flash-lite
