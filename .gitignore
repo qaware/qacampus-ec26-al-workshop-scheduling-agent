@@ -8,3 +8,4 @@ dist/
 .omc
 mcp-server/.omc
 docs
+/kubeconfig.yaml

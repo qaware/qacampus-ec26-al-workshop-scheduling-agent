@@ -10,7 +10,28 @@
 - Local Kubernetes cluster (e.g., minikube, kind, Docker Desktop)
 - [Tilt](https://tilt.dev/) for local development
 
-## Local Development with Tilt
+## Option 1: Use the remote cluster
+
+### Decrypt Kubeconfig
+
+Use the included decryption script.
+
+If using Windows, find another way to get the decoded file, e.g. via https://www.cryptool.org/en/cto/openssl/?tab=encryption 
+Alternatively, use https://web.localsend.org/ and ask a friend.
+
+1. Decrypt the kubeconfig (Kubernetes credentials file).
+```bash
+./decrypt-kubeconfig.sh kubeconfigs-encrypted/workshop-kubeconfig.yaml.enc <password-announced-during-workshop> kubeconfig.yaml
+```
+
+2. Connect to the cluster
+    ```bash
+    export KUBECONFIG=kubeconfig.yaml 
+   
+    kubectl get pods
+    ```
+
+## Option 2: Use a local cluster (with Tilt)
 
 ### Prerequisites
 
