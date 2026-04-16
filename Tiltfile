@@ -76,7 +76,7 @@ k8s_resource('observability-dashboard', labels=['agentic-layer'], port_forwards=
 # Testbench
 v1alpha1.extension(name='testbench', repo_name='agentic-layer', repo_path='testbench')
 load('ext://testbench', 'testbench_install')
-testbench_install(version='0.8.0', operator_version='0.8.0')
+testbench_install(version='0.8.0', operator_version='0.8.0', testkube_version='2.8.3')
 
 # LibreChat
 v1alpha1.extension(name='librechat', repo_name='agentic-layer', repo_path='librechat')
@@ -85,22 +85,18 @@ librechat_install(port='11003')
 
 
 # k8s_yaml(kustomize('deploy/local'))
-#
 # k8s_yaml(secret_from_dict(
 #     name = "api-key-secrets",
 #     namespace = "ec-schedule",
 #     # The ai-gateway expects the API key to be called <provider>_API_KEY
 #     inputs = { "GEMINI_API_KEY": google_api_key }
 # ))
-#
 # k8s_resource('ec-schedule-agent', labels=['showcase'], resource_deps=['agent-runtime', 'ec-schedule-mcp'])
 # k8s_resource('ec-schedule-agent-experiment', labels=['testing'], resource_deps=['testbench', 'ai-gateway'])
-#
 # k8s_resource(
 #     objects=['presidio:guardrailprovider', 'pii-guard:guard'],
 #     new_name='presidio-guardrail',
 #     labels=['agentic-layer'],
 #     resource_deps=['agent-runtime', 'presidio']
 # )
-#
 # k8s_resource('ai-gateway-pii', labels=['agentic-layer'], resource_deps=['agent-runtime', 'presidio-guardrail'])
