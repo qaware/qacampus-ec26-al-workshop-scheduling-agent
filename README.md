@@ -77,12 +77,9 @@ Once Tilt is running, the following services are available locally:
 
 ## Deploying Local Resources
 
-The `deploy/local/` directory contains Kubernetes manifests managed with [Kustomize](https://kustomize.io/). These include:
+### Before you start
 
-- `guardrail-presidio.yaml` — PII guardrail
-- `ai-gateway-pii.yaml` — AI Gateway PII configuration
-- `ec-schedule-agent.yaml` — EC Schedule Agent
-- `ec-schedule-agent-experiment.yaml` — EC Schedule Agent Experiment
+Replace `<your-namespace>` with your actual namespace in all files under `deploy/local/`.
 
 ## Apply resources
 
