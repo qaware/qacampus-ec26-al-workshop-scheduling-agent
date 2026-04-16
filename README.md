@@ -75,3 +75,30 @@ Once Tilt is running, the following services are available locally:
 | Tool Gateway             | http://localhost:11005      |
 | EC Schedule MCP Server   | http://localhost:11020      |
 
+## Deploying Local Resources
+
+The `deploy/local/` directory contains Kubernetes manifests managed with [Kustomize](https://kustomize.io/). These include:
+
+- `guardrail-presidio.yaml` — PII guardrail
+- `ai-gateway-pii.yaml` — AI Gateway PII configuration
+- `ec-schedule-agent.yaml` — EC Schedule Agent
+- `ec-schedule-agent-experiment.yaml` — EC Schedule Agent Experiment
+
+## Apply resources
+
+```bash
+kubectl apply -k deploy/local/
+```
+
+### Apply a single resource
+
+```bash
+kubectl apply -f deploy/local/<filename>.yaml
+```
+
+### Remove all resources
+
+```bash
+kubectl delete -k deploy/local/
+```
+
